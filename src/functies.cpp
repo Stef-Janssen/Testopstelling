@@ -37,18 +37,32 @@ void resettest() {
     digitalWrite(relais_2, LOW);
 }
 
+// Functie om te controleren of de detect probe ingedrukt
+bool detectprobe() {
+    if (digitalRead(detect_probe) != LOW) {
+        Serial.println("Detect probe is laag");
+        digitalWrite(led_geel, LOW);
+        digitalWrite(led_rood, HIGH);
+        return true;
+    }
+    return false;
+}
+
 // Functie om te wachten op de startvoorwaarden
 void starttest() {
     Serial.println("Wachten op startvoorwaarden");
     while (digitalRead(drukknop) == HIGH || digitalRead(detect_probe) == HIGH) {
     }
     resettest();
-    Serial.println("Test gestart!");
+    Serial.println("Test gestart");
     digitalWrite(led_groen, LOW);
 }
 
 // Stap 1 en 5: relais 1 inschakelen en meting uitvoeren
 bool stap1_5() {
+    if (detectprobe()) {
+        return false;
+    }
     digitalWrite(led_geel, LOW);
     digitalWrite(relais_1, HIGH);
     digitalWrite(relais_2, LOW);
@@ -68,6 +82,9 @@ bool stap1_5() {
 
 // Stap 2 en 4: relais 1 en 2 inschakelen en meting uitvoeren
 bool stap2_4() {
+    if (detectprobe()) {
+        return false;
+    }
     digitalWrite(led_geel, LOW);
     digitalWrite(relais_1, HIGH);
     digitalWrite(relais_2, HIGH);
@@ -87,6 +104,9 @@ bool stap2_4() {
 
 // Stap 3: relais 2 inschakelen en meting uitvoeren
 bool stap3() {
+    if (detectprobe()) {
+        return false;
+    } 
     digitalWrite(led_geel, LOW);
     digitalWrite(relais_1, LOW);
     digitalWrite(relais_2, HIGH);

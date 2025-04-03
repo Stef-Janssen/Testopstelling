@@ -3,6 +3,7 @@
 
 void initialisatie();
 void resettest();
+bool detectprobe();
 void starttest(); 
 bool stap1_5();
 bool stap2_4();
