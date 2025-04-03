@@ -2,22 +2,25 @@
 #include "functies.h"
 
 void setup() {
-    initialisatie();                             // Configureer de pinnen
-    resettest();                                 // Zet alles uit bij de start
-}
+    initialisatie();                                       // Configureer de pinnen
+    resettest();                                           // Zet alles uit bij de start
+}       
 
-void loop() {
-    starttest();                                 // Wachten op start
-    if (stap1_5()) {                             // Stap 1 uitvoeren
-        if (stap2_4()) {                         // Stap 2 uitvoeren
-            if (stap3()) {                       // Stap 3 uitvoeren                             
-                if (stap2_4())  {                // Stap 4 uitvoeren
-                    if (stap1_5())  {            // Stap 5 uitvoeren
-                        testgeslaagd();          // test is gelukt
-                    }
-                }
-            }    
-        }
+void loop() {       
+    starttest();                                           // Wachten op start
+
+    bool result = schakelrelais(HIGH, LOW);                // Schakel relais 1
+    if(result) result = schakelrelais(HIGH, HIGH);         // Schakel relais 1 en 2
+    if(result) result = schakelrelais(LOW, HIGH);          // Schakel relais 2
+    if(result) result = schakelrelais(HIGH, HIGH);         // Schakel relais 1 en 2 
+    if(result) result = schakelrelais(HIGH, LOW);          // Schakel relais 1
+    if(result) {                                           // Test geslaagd dus reset test
+        Serial.println("Test geslaagd"); 
+        resettest();  
+    }                              
+    else {
+        Serial.println("Test mislukt");                    // Test mislukt 
+        digitalWrite(relais_1, LOW);
+        digitalWrite(relais_2, LOW);
     }
-    eindigtest();                                // Test eindigen
 }
