@@ -1,8 +1,8 @@
 #include <Arduino.h>
 #include "functies.h"
 
-uint16_t wachttijd = 500;                                  // Aantal ms tussen aansturen relais en starten meting
-uint16_t indicatortijd = 250;                              // Aantal ms dat indicator lampje aan is tussen de stappen
+uint16_t wachttijd = 125;                                  // Aantal ms tussen aansturen relais en starten meting
+uint16_t indicatortijd = 100;                              // Aantal ms dat indicator lampje aan is tussen de stappen
 
 // Functie om de pinnen in te stellen
 void initialisatie() {
@@ -21,7 +21,7 @@ void initialisatie() {
 // Functie om de test te resetten
 void resettest() {
     digitalWrite(led_geel, LOW);
-    digitalWrite(led_groen, HIGH);
+    digitalWrite(led_groen, LOW);
     digitalWrite(led_rood, LOW);
     digitalWrite(relais_1, LOW);
     digitalWrite(relais_2, LOW);
@@ -31,18 +31,32 @@ void resettest() {
 bool detectprobe() {
     if (digitalRead(detect_probe) != LOW) {
         Serial.println("Detect probe is laag");
-        digitalWrite(led_geel, LOW);
-        digitalWrite(led_rood, HIGH);
+        digitalWrite(led_geel, LOW);        // Zet alle LED's uit
+        digitalWrite(led_groen, LOW);
+        digitalWrite(led_rood, LOW);
         return true;
+    } else {
+        digitalWrite(led_geel, HIGH);  
+        return false;
     }
-    return false;
+
 }
 
 // Functie om te wachten op de startvoorwaarden
 void starttest() {
+    delay(wachttijd);
     Serial.println("Wachten op startvoorwaarden");
-    while (digitalRead(drukknop) == HIGH || digitalRead(detect_probe) == HIGH) {
+    while (true) {
+        if (digitalRead(detect_probe) != LOW) {
+            resettest();
+            return;
+        }
+
+        if (digitalRead(drukknop) == LOW && digitalRead(detect_probe) == LOW) {
+            break;
+        }
     }
+
     Serial.println("Test gestart");
     digitalWrite(led_groen, LOW);
     digitalWrite(led_rood, LOW);
