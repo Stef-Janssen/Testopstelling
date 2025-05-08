@@ -21,13 +21,12 @@ void loop() {
     if(result) result = schakelrelais(HIGH, HIGH);         // Schakel relais 1 en 2 
     if(result) result = schakelrelais(HIGH, LOW);          // Schakel relais 1
     if(result) {                                           // Test geslaagd dus reset test
-        Serial.println("Test geslaagd");
+        Serial.println("Test geslaagd!");
         digitalWrite(relais_1, LOW);
         digitalWrite(relais_2, LOW); 
         digitalWrite(led_groen, HIGH);  
     }                              
     else {
-        Serial.println("Test mislukt");                    // Test mislukt 
         digitalWrite(relais_1, LOW);
         digitalWrite(relais_2, LOW);
     }

@@ -17,7 +17,5 @@ void resettest();
 bool detectprobe();
 void starttest(); 
 bool schakelrelais(int relais1_status, int relais2_status);
-//void testgeslaagd();
-//void testmislukt();
 
 #endif
